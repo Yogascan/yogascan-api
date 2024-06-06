@@ -9,7 +9,6 @@ class Poses(Resource):
             pose_list = []
             for pose in poses:
                 pose_dict = pose.to_dict()
-                pose_dict['id'] = pose.id
                 pose_list.append(pose_dict)
             return {"poses": pose_list}, 200
         except Exception as e:
