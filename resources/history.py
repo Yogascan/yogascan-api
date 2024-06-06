@@ -8,8 +8,16 @@ import pytz
 class History(Resource):
     def get(self):
         try:
-            #get token from header and decode it to uid
-            token = request.headers.get('Authorization').split('Bearer ')[1]
+            # Get token from header and decode it to uid
+            authorization_header = request.headers.get('Authorization')
+            if not authorization_header:
+                return {"message": "Authorization header is missing"}, 401
+            
+            try:
+                token = authorization_header.split('Bearer ')[1]
+            except IndexError:
+                return {"message": "Token not provided"}, 401
+
             decoded_token = auth.verify_id_token(token)
             uid = decoded_token['uid']
             

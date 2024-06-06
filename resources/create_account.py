@@ -9,7 +9,6 @@ class CreateAccount(Resource):
         data = request.get_json()
 
         # Extract specific fields from the JSON data
-        token = data.get('token')
         email = data.get('email')
         password = data.get('password')
         username = data.get('username')
@@ -19,10 +18,6 @@ class CreateAccount(Resource):
             return {"error": "Email, password, and username are required"}, 400
 
         try:
-            # Verify the provided token to get the user's UID
-            decoded_token = auth.verify_id_token(token)
-            uid = decoded_token['uid']
-
             # Create a new user with the provided email and password
             user = auth.create_user(
                 email=email,
@@ -35,7 +30,7 @@ class CreateAccount(Resource):
             # Return a success message along with the UID
             return {
                 "message": "Successfully created new user",
-                "uid": uid
+                "uid": user.uid
             }, 201
         except Exception as e:
             # Return an error message if any exception occurs
