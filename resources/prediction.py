@@ -4,12 +4,12 @@ from werkzeug.utils import secure_filename
 from tensorflow.keras.models import load_model
 import numpy as np
 from PIL import Image
+from io import BytesIO
 from flask_restful import Resource, Api
 
 app = Flask(__name__)
 api = Api(app)
 app.config["ALLOWED_EXTENSIONS"] = {'png', 'jpg', 'jpeg'}
-app.config["UPLOAD_FOLDER"] = "./static/uploads"
 app.config['LABELS_FILE'] = "./label.txt"
 
 def allowed_file(filename):
@@ -24,16 +24,17 @@ class Predict(Resource):
     def post(self):
         image = request.files.get("image")
         if image and allowed_file(image.filename):
-            filename = secure_filename(image.filename)
-            image.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
-            image_path = os.path.join(app.config["UPLOAD_FOLDER"], filename)
-
-            img = Image.open(image_path).convert("RGB")
+            # Read image as bytes
+            image_bytes = image.read()
+            
+            # Preprocess image
+            img = Image.open(BytesIO(image_bytes)).convert("RGB")
             img = img.resize((224, 224))
             img_array = np.asarray(img)
             img_array = np.expand_dims(img_array, axis=0)
             img_array = img_array.astype(np.float32) / 255.0
 
+            # Make prediction
             prediction = model.predict(img_array)
             index = np.argmax(prediction)
             class_name = labels[index]
@@ -62,6 +63,4 @@ class Predict(Resource):
 api.add_resource(Predict, '/predict')
 
 if __name__ == '__main__':
-    if not os.path.exists(app.config["UPLOAD_FOLDER"]):
-        os.makedirs(app.config["UPLOAD_FOLDER"])
     app.run(debug=True)
