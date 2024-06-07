@@ -16,7 +16,7 @@ def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in app.config["ALLOWED_EXTENSIONS"]
 
 # Load the model and labels
-model = load_model("yogapose.h5", compile=False)
+model = load_model("yogapose.keras", compile=False)
 with open(app.config['LABELS_FILE'], 'r') as file:
     labels = file.read().splitlines()
 
