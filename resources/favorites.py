@@ -1,24 +1,10 @@
 from flask_restful import Resource
 from flask import request
 from firebase_setup import db
-from firebase_admin import auth
 
 class getFavorite(Resource):
-    def get(self):
+    def get(self, uid):
         try:
-            # Get token from header and decode it to uid
-            authorization_header = request.headers.get('Authorization')
-            if not authorization_header:
-                return {"message": "Authorization header is missing"}, 401
-            
-            try:
-                token = authorization_header.split('Bearer ')[1]
-            except IndexError:
-                return {"message": "Token not provided"}, 401
-
-            decoded_token = auth.verify_id_token(token)
-            uid = decoded_token['uid']
-            
             # Retrieve favorite poses for the user            
             favorite_ref = db.collection('favorite').where('uid', '==', uid).stream()
             favorite_list = [doc.to_dict() for doc in favorite_ref]
@@ -40,12 +26,8 @@ class getFavorite(Resource):
         except Exception as e:
             return {"message": "An error occurred: " + str(e)}, 500
         
-    def post(self):
+    def post(self, uid):
         try:
-            token = request.headers.get('Authorization').split('Bearer ')[1]
-            decoded_token = auth.verify_id_token(token)
-            uid = decoded_token['uid']
-            
             pose_id = request.json['pose_id']
             # Retrieve favorite poses for the user
             favorite_ref = db.collection('favorite').where('uid', '==', uid).stream()
@@ -68,12 +50,8 @@ class getFavorite(Resource):
         except Exception as e:
             return {"message": "An error occurred: " + str(e)}, 500
 
-    def delete(self):
+    def delete(self, uid):
         try:
-            token = request.headers.get('Authorization').split('Bearer ')[1]
-            decoded_token = auth.verify_id_token(token)
-            uid = decoded_token['uid']
-            
             pose_id = request.json['pose_id']
             # Retrieve favorite poses for the user
             favorite_ref = db.collection('favorite').where('uid', '==', uid).stream()

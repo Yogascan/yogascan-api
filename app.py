@@ -19,10 +19,10 @@ api.add_resource(Poses, '/poses')
 api.add_resource(Pose, '/pose/<pose_id>')
 
 # Favorite
-api.add_resource(getFavorite, '/favorite')
+api.add_resource(getFavorite, '/favorite/<uid>')
 
 # History
-api.add_resource(History, '/history')
+api.add_resource(History, '/history/<uid>')
 
 # Predict
 api.add_resource(Predict, '/prediction')
