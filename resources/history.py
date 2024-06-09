@@ -2,11 +2,12 @@ from flask_restful import Resource
 from flask import request
 from firebase_setup import db
 from datetime import datetime
-import pytz
 
 class History(Resource):
-    def get(self, uid):
+    def get(self):
         try:
+            uid = request.json['uid']
+
             # Retrieve documents from the 'history' collection where 'uid' matches the provided user ID
             history_ref = db.collection('history').where('uid', '==', uid).stream()
             history_list = [doc.to_dict() for doc in history_ref]
@@ -28,7 +29,7 @@ class History(Resource):
                 if pose_list:
                     pose_data = pose_list[0]
                     history_entry = {
-                        "Date": history['date'].isoformat(),  # Convert date to ISO format for JSON serialization
+                        "date": history['date'],
                         "result": history['result'],
                         "pose": {
                             "pose_id": pose_data['pose_id'],
@@ -46,11 +47,11 @@ class History(Resource):
             # Return an error message if any exception occurs
             return {"message": "An error occurred: " + str(e)}, 500
 
-    def post(self, uid):
+    def post(self):
         try:
+            uid = request.json['uid']
             # Parse the date string from the request body and convert it to a datetime object
-            date_str = request.json['date']
-            date = datetime.fromisoformat(date_str.rstrip('Z')).replace(tzinfo=pytz.UTC)
+            date = datetime.now()
             pose_id = request.json['pose_id']
             result = request.json['result']
 
@@ -60,7 +61,7 @@ class History(Resource):
 
             # Prepare a new history entry
             new_entry = {
-                "date": date,
+                "date": date.isoformat(),
                 "pose_id": pose_id,
                 "result": result
             }

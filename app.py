@@ -5,6 +5,7 @@ from resources.poses import Poses, Pose
 from resources.favorites import getFavorite
 from resources.history import History
 from resources.prediction import Predict
+from resources.login import Login
 
 
 # Flask application
@@ -14,15 +15,18 @@ api = Api(app)
 # Create Account
 api.add_resource(CreateAccount, '/signup')
 
+# Predict
+api.add_resource(Login, '/login')
+
 # Pose 
 api.add_resource(Poses, '/poses')
 api.add_resource(Pose, '/pose/<pose_id>')
 
 # Favorite
-api.add_resource(getFavorite, '/favorite/<uid>')
+api.add_resource(getFavorite, '/favorite')
 
 # History
-api.add_resource(History, '/history/<uid>')
+api.add_resource(History, '/history')
 
 # Predict
 api.add_resource(Predict, '/prediction')
