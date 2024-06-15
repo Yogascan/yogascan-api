@@ -9,13 +9,10 @@ from resources.favorites import getFavorite
 from resources.history import History
 from resources.prediction import Predict
 from resources.login import Login
-<<<<<<< HEAD
 from resources.update_pic import UpdateProfPic
-=======
 from resources.delete_account import DeleteAccount
 from resources.user import getUser
 
->>>>>>> 9f9c34d6ec7604bc574c2f52359ca13d708c68f0
 
 
 # Flask application
@@ -42,18 +39,15 @@ api.add_resource(History, '/history')
 # Predict
 api.add_resource(Predict, '/prediction')
 
-<<<<<<< HEAD
 # Update Profile Picture
 api.add_resource(UpdateProfPic, '/updatePict')
 
-=======
 # Delete Account
 api.add_resource(DeleteAccount, '/delete-account')
 
 # Get User
 # Delete Account
 api.add_resource(getUser, '/user')
->>>>>>> 9f9c34d6ec7604bc574c2f52359ca13d708c68f0
 
 # Main driver function
 if __name__ == '__main__':
