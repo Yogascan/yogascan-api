@@ -40,7 +40,7 @@ api.add_resource(History, '/history')
 api.add_resource(Predict, '/prediction')
 
 # Update Profile Picture
-api.add_resource(UpdateProfPic, '/updatePict')
+api.add_resource(UpdateProfPic, '/update-picture')
 
 # Delete Account
 api.add_resource(DeleteAccount, '/delete-account')
