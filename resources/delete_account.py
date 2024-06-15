@@ -4,7 +4,7 @@ from firebase_setup import db
 from firebase_admin import auth
 
 class DeleteAccount(Resource):
-    def post(self):
+    def delete(self):
         try:
             uid = request.json['uid']
 

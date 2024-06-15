@@ -25,7 +25,7 @@ class CreateAccount(Resource):
             )
 
             # Add the new user's UID and username to the Firestore database
-            db.collection('user').add({'uid': user.uid, 'username': username, 'profile_picture': 'test'})
+            db.collection('user').add({'uid': user.uid, 'username': username, 'profile_picture': 'https://storage.googleapis.com/yogascan-bucket/profile-picture/profil-user.png'})
 
             # Return a success message along with the UID
             return {
