@@ -1,4 +1,5 @@
 firebase_admin
+flask-cors
 flask-restful
 flask
 Werkzeug==3.0.3
