@@ -4,7 +4,7 @@ from firebase_setup import db
 from firebase_admin import auth
 
 class getUser(Resource):
-    def get(self):
+    def post(self):
         try:
             # Mendapatkan UID dari permintaan JSON
             uid = request.json['uid']

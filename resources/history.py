@@ -4,7 +4,44 @@ from firebase_setup import db
 from datetime import datetime
 
 class History(Resource):
-    def get(self):
+    def post(self):
+        try:
+            uid = request.json['uid']
+            # Parse the date string from the request body and convert it to a datetime object
+            date = datetime.now()
+            pose_id = request.json['pose_id']
+            result = request.json['result']
+
+            # Retrieve documents from the 'history' collection where 'uid' matches the provided user ID
+            history_ref = db.collection('history').where('uid', '==', uid).stream()
+            history_list = list(history_ref)
+
+            # Prepare a new history entry
+            new_entry = {
+                "date": date.isoformat(),
+                "pose_id": pose_id,
+                "result": result
+            }
+
+            if history_list:
+                # If history exists for the user, append the new entry to the existing history
+                doc_id = history_list[0].id
+                existing_history = history_list[0].to_dict()['history']
+                existing_history.append(new_entry)
+                db.collection('history').document(doc_id).update({'history': existing_history})
+            else:
+                 # If no history exists, create a new document with the new entry
+                db.collection('history').add({'uid': uid, 'history': [new_entry]})
+
+            # Return a success message
+            return {"message": "History entry added successfully"}, 201
+
+        except Exception as e:
+            # Return an error message if any exception occurs
+            return {"message": "An error occurred: " + str(e)}, 500
+
+class getHistory(Resource):
+    def post(self):
         try:
             uid = request.json['uid']
 
@@ -42,42 +79,6 @@ class History(Resource):
 
             # Return the list of history entries
             return {"history": result_list}, 200
-
-        except Exception as e:
-            # Return an error message if any exception occurs
-            return {"message": "An error occurred: " + str(e)}, 500
-
-    def post(self):
-        try:
-            uid = request.json['uid']
-            # Parse the date string from the request body and convert it to a datetime object
-            date = datetime.now()
-            pose_id = request.json['pose_id']
-            result = request.json['result']
-
-            # Retrieve documents from the 'history' collection where 'uid' matches the provided user ID
-            history_ref = db.collection('history').where('uid', '==', uid).stream()
-            history_list = list(history_ref)
-
-            # Prepare a new history entry
-            new_entry = {
-                "date": date.isoformat(),
-                "pose_id": pose_id,
-                "result": result
-            }
-
-            if history_list:
-                # If history exists for the user, append the new entry to the existing history
-                doc_id = history_list[0].id
-                existing_history = history_list[0].to_dict()['history']
-                existing_history.append(new_entry)
-                db.collection('history').document(doc_id).update({'history': existing_history})
-            else:
-                 # If no history exists, create a new document with the new entry
-                db.collection('history').add({'uid': uid, 'history': [new_entry]})
-
-            # Return a success message
-            return {"message": "History entry added successfully"}, 201
 
         except Exception as e:
             # Return an error message if any exception occurs

@@ -5,8 +5,9 @@ from flask_restful import Api
 # from file_name import function_name
 from resources.create_account import CreateAccount
 from resources.poses import Poses, Pose
-from resources.favorites import getFavorite
+from resources.favorites import getFavorite, Favorite
 from resources.history import History
+from resources.history import getHistory
 from resources.prediction import Predict
 from resources.login import Login
 from resources.update_pic import UpdateProfPic
@@ -31,10 +32,12 @@ api.add_resource(Poses, '/poses')
 api.add_resource(Pose, '/pose/<pose_id>')
 
 # Favorite
-api.add_resource(getFavorite, '/favorite')
+api.add_resource(Favorite, '/favorite')
+api.add_resource(getFavorite, '/favorites')
 
 # History
 api.add_resource(History, '/history')
+api.add_resource(getHistory, '/histories')
 
 # Predict
 api.add_resource(Predict, '/prediction')

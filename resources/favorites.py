@@ -2,31 +2,7 @@ from flask_restful import Resource
 from flask import request
 from firebase_setup import db
 
-class getFavorite(Resource):
-    def get(self):
-        try:
-            uid = request.json['uid']
-            # Retrieve favorite poses for the user            
-            favorite_ref = db.collection('favorite').where('uid', '==', uid).stream()
-            favorite_list = [doc.to_dict() for doc in favorite_ref]
-
-            # Extract pose IDs
-            if favorite_list:
-                pose_ids = favorite_list[0]['pose']
-
-                # Retrieve pose details
-                pose_details = []
-                for pose_id in pose_ids:
-                    pose_query = db.collection('pose').where('pose_id', '==', pose_id).stream()
-                    for pose in pose_query:
-                        pose_details.append(pose.to_dict())
-
-                return {"favorites": pose_details}, 200
-            else:
-                return {"message": "No favorite poses found"}, 404
-        except Exception as e:
-            return {"message": "An error occurred: " + str(e)}, 500
-        
+class Favorite(Resource):        
     def post(self):
         try:
             uid = request.json['uid']
@@ -74,3 +50,28 @@ class getFavorite(Resource):
                 return {"message": "No favorite poses found for user"}, 404
         except Exception as e:
             return {"message": "An error occurred: " + str(e)}, 500
+
+class getFavorite(Resource):        
+    def post(self):
+        try:
+            uid = request.json['uid']
+            # Retrieve favorite poses for the user            
+            favorite_ref = db.collection('favorite').where('uid', '==', uid).stream()
+            favorite_list = [doc.to_dict() for doc in favorite_ref]
+
+            # Extract pose IDs
+            if favorite_list:
+                pose_ids = favorite_list[0]['pose']
+
+                # Retrieve pose details
+                pose_details = []
+                for pose_id in pose_ids:
+                    pose_query = db.collection('pose').where('pose_id', '==', pose_id).stream()
+                    for pose in pose_query:
+                        pose_details.append(pose.to_dict())
+
+                return {"favorites": pose_details}, 200
+            else:
+                return {"message": "No favorite poses found"}, 404
+        except Exception as e:
+                return {"message": "An error occurred: " + str(e)}, 500
