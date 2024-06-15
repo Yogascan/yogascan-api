@@ -6,6 +6,7 @@ from resources.favorites import getFavorite
 from resources.history import History
 from resources.prediction import Predict
 from resources.login import Login
+from resources.update_pic import UpdateProfPic
 
 
 # Flask application
@@ -30,6 +31,9 @@ api.add_resource(History, '/history')
 
 # Predict
 api.add_resource(Predict, '/prediction')
+
+# Update Profile Picture
+api.add_resource(UpdateProfPic, '/updatePict')
 
 
 # Main driver function
